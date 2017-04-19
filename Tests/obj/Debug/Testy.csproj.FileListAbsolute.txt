@@ -1,0 +1,15 @@
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\chromedriver.exe
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\Tests.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\Tests.pdb
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\nunit.core.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\nunit.core.interfaces.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\nunit.framework.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\nunit.util.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\WebDriver.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\WebDriver.Support.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\nunit.framework.xml
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\WebDriver.xml
+C:\root\Tools\Brunch2\MVCTestTools\Tests\bin\Debug\WebDriver.Support.xml
+C:\root\Tools\Brunch2\MVCTestTools\Tests\obj\Debug\Testy.csprojResolveAssemblyReference.cache
+C:\root\Tools\Brunch2\MVCTestTools\Tests\obj\Debug\Tests.dll
+C:\root\Tools\Brunch2\MVCTestTools\Tests\obj\Debug\Tests.pdb

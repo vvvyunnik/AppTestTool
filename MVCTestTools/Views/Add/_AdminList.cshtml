@@ -1,0 +1,92 @@
+﻿
+@model MVCTestTools.Entities.Admin
+<style>
+    .btn-group .active {
+        background-color: #cfe1e1;
+    }
+</style>
+
+<div id="alertSelectAdmins"></div>
+<div class="container">
+    <div class="col-lg-12 btn-group btn-group-lg" data-toggle="buttons" id="AdminsCheckbox">
+    </div>
+    <hr />
+    <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#adminModal" id="CreateAdminBtn">New Admin</button>
+</div>
+
+@using (Ajax.BeginForm("CreateNewAdmin", "Add", new AjaxOptions() { HttpMethod = "POST", OnSuccess = "closeModal();  $('#CreateAdminPopup')[0].reset();" }, new { id= "CreateAdminPopup" }))
+{
+    <div class="modal fade" id="adminModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                    <h4 class="modal-title" id="ModalLabel">Add Admin</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        @Html.Partial("_NewAdminModalWin")
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" id="Sub" class="btn btn-primary" value="Submit">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    function closeModal() {
+        loadAdmins();
+        $('#adminModal').modal('hide');
+    }
+
+    $(document).ready(function () {
+        loadAdmins();
+    });
+
+    function loadAdmins() {
+        $.ajax({
+            url: "@Url.Action("GetAllAdmins", "Add")",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var adminTable = "";
+                $.each(result, function (key, admin) {
+                    adminTable += '<label class="btn btn-default btn-block" style="display:flex; justify-content: space-around;">';
+                    adminTable += '<input type="checkbox" value="' + admin.UserName + '">' + admin.UserName;
+                    adminTable += '<label>' + admin.Email + '</label>';
+                    adminTable += '<a href="#" onclick="DeleleAdmin(' + admin.AdminID + ')"><i class="glyphicon glyphicon-trash"></i></a>';
+                    adminTable += '</label>';
+                });
+                $('#AdminsCheckbox').html(adminTable);
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    }
+
+    function DeleleAdmin(adminId) {
+        $.ajax({
+            url: "@Url.Action("DeleteAdmin","Add")",
+            type: "DELETE",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            data: JSON.stringify({ adminId: adminId }),
+            success: function (result) {
+                loadAdmins();
+            },
+            error: function (error) {
+                alert("AdminList" + error.responseText);
+            }
+        });
+    }
+
+
+</script>

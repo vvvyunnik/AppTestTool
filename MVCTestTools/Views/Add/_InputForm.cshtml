@@ -1,0 +1,106 @@
+﻿
+@model MVCTestTools.ViewModels.CreateAppViewModel
+
+<form id="CreateAppForm">
+    @Html.ValidationSummary(true, null, new { @class = "text-danger" })
+    <div class="row">
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProjectName, new { @class = "col-md-8 control-label" })
+            <div class="col-3">
+                @Html.TextBoxFor(model => model.ProjectName, new { @class = "form-control", @placeholder = "Intranet", @id = "projectNameText" })
+                @Html.ValidationMessageFor(model => model.ProjectName, "")
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Url, new { @class = "col-md-8 control-label" })
+            <div class="col-3">
+                @Html.TextBoxFor(model => model.Url, new { @class = "form-control", @placeholder = @"https://intranet-epby.office.int/", @id = "urlText" })
+                @Html.ValidationMessageFor(model => model.Url, "")
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.SearchParameter, new { @class = "col-md-8 control-label" })
+            <div class="col-3">
+                @Html.TextBoxFor(model => model.SearchParameter, new { @class = "form-control", @placeholder = @"Login", @id = "searchParameterText" })
+                @Html.ValidationMessageFor(model => model.SearchParameter, "")
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Browser, new { @class = "col-md-8 control-label" })
+            <div class="col-3">
+                @{
+                    var selectList = new SelectList(
+                        new List<SelectListItem>
+                        {
+                            new SelectListItem {Text = "Chrome", Value = "Chrome"},
+                            new SelectListItem {Text = "Firefox", Value = "Firefox"},
+                        }, "Value", "Text");
+                }
+                @Html.DropDownListFor(m => m.Browser, selectList, "Browser", new { @class = "form-control", @id = "selectList" })
+                @Html.ValidationMessageFor(x => x.Browser)
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <div class="col-lg-4">
+                <input type="submit" value="Create" class="btn btn-success btn-lg" id="submitBtn" />
+            </div>
+            <div class="col-lg-4">
+                <input type="reset" value="Cancel" class="btn btn-warning btn-lg" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<script type="text/javascript">
+    function CallAlert() {
+        $('#alertSelectAdmins').replaceWith('<div class="alert alert-danger" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>Select an admin or several admins.</div>');
+    }
+    $("#submitBtn").on('click', function () {
+        var checkedAdmins = new Array();
+        $("input:checkbox:checked").each(function () {
+            var valueOfLabel = $(this).val();
+            checkedAdmins.push(valueOfLabel);
+        });
+        checkedAdmins.pop();
+        if (checkedAdmins.length === 0) {
+            CallAlert();
+            return false;
+        }
+        var browser = $("#selectList option:selected").text();
+        console.log(browser);
+
+        var data = {
+            ProjectName: $('#projectNameText').val(),
+            Url: $('#urlText').val(),
+            SearchParameter: $('#searchParameterText').val(),
+            Browser: browser,
+            UserName: checkedAdmins
+        };
+        console.log(data);
+        $.ajax({
+            url: "@Url.Action("CreateNewTest", "Add")",
+            type: "POST",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success:function (success) {
+                ClearInputField();
+                
+            }
+            //error: function (error) {
+            //    alert("Form" + error);
+            //}            
+        });
+        return;
+    })
+
+    function ClearInputField() {
+        $('#CreateAppForm')[0].reset();
+    }
+</script>

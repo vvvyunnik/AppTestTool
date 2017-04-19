@@ -1,0 +1,101 @@
+﻿@model IEnumerable<MVCTestTools.ViewModels.AppListViewModel>
+
+<div class="well">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Url
+                </th>
+                <th>
+                    Search Parameter
+                </th>
+                <th>
+                    Admins
+                </th>
+                <th>
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody id="BodyOfAppsTable"></tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        loadApps();
+    });
+
+    function loadApps() {
+        $.ajax({
+            url: "@Url.Action("GetAllApps", "Add")",
+            type: "GET",
+            contentType: "application/json;charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var appTable = " ";
+                $.each(result, function (key, app) {
+                    appTable += '<tr name="' + app.AppID + 'line">';
+                    appTable += '<td>' + app.ProjectName + '</td>';
+                    appTable += '<td>' + app.Url + '</td>';
+                    appTable += '<td>' + app.SearchParameter + '</td>';
+                    var admins = " ";
+                    $.each(app.UserName, function (subindex, subvalue) {
+                        admins += '<p><p class="adminLogin h5">' + subvalue + " " + '</p></p>';
+                    });
+                    appTable += '<td name="' + app.AppID + 'line">' + admins + '</td>'
+                    appTable += '<td><a href="#" class="updateBtn" id="' + app.AppID + 'updBtn" onclick="updateApps(' + app.AppID + ')"><i class="glyphicon glyphicon-pencil"></i></a></td>';
+                    appTable += '<td><a href="#" onclick="DeleleApp(' + app.AppID + ')"><i class="glyphicon glyphicon-trash"></i></a></td>';
+                    appTable += '</tr>';
+                });
+                $('#BodyOfAppsTable').html(appTable);
+            },
+            error: function (error) {
+                alert(error.responseText);
+            }
+        });
+    }
+
+    var clickBool = false;
+    function updateApps(appId) {
+        var rightLine = appId + "line";
+        if (clickBool)
+        {
+            clickBool = false;
+            $('#' + appId + 'updBtn').replaceWith('<a href="#" class="updateBtn" id="' + appId + 'updBtn" onclick="updateApps(' + appId + ')"><i class="glyphicon glyphicon-pencil"></i></a>');
+            $('tr[name*=' + rightLine + ']').find("td:not(:gt(3)):not(:first):not(:gt(5)):not(:gt(4))").attr("contentEditable", false);
+        }
+        else {
+            clickBool = true;
+            $('#' + appId + 'updBtn').replaceWith('<a href="#" class="updateBtn" id="' + appId + 'updBtn" onclick="updateApps(' + appId + ')>FFFFFFFFFFFFFff</a>');
+            $('tr[name*=' + rightLine + ']').find("td:not(:gt(3)):not(:first):not(:gt(5)):not(:gt(4))").attr("contentEditable", true);
+            $('td[name*=' + rightLine + '] .adminLogin').replaceWith(function () {
+                var closeButton = "<span id='close' onclick='this.parentNode.parentNode.removeChild(this.parentNode); return false;'>&times;</span>";
+                return $('<button/>', { html: this.innerHTML + closeButton }).addClass('btn btn-default btn-sm');
+            })
+        }
+               
+    }
+
+    function DeleleApp(appId) {
+        $.ajax({
+            url: "@Url.Action("DeleteApp","Add")",
+            type: "DELETE",
+            contentType: "application/json;charset=UTF-8",
+            dataType: "json",
+            data: JSON.stringify({ appId: appId }),
+            success: function (result) {
+                loadApps();
+            },
+            error: function (error) {
+                alert("AppList"+error.responseText);
+            }
+        });
+    }
+</script>
